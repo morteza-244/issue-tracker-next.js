@@ -12,3 +12,5 @@ export const issueFormSchema = z.object({
     })
     .min(3),
 });
+
+export type TIssueFormData = z.infer<typeof issueFormSchema>;
