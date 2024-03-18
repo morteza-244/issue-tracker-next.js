@@ -1,8 +1,11 @@
+"use client";
+import classNames from "classnames";
 import { Bug } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { usePathname } from "next/navigation";
 
 const NavBar = () => {
+  const pathname = usePathname();
   const links = [
     { label: "Dashboard", href: "/" },
     { label: "Issues", href: "/issues" },
@@ -17,7 +20,11 @@ const NavBar = () => {
           <Link
             key={link.href}
             href={link.href}
-            className="text-zinc-500 hover:text-zinc-900 transition-colors font-medium"
+            className={classNames({
+              "text-zinc-900": link.href === pathname,
+              "text-zinc-500": link.href !== pathname,
+              "hover:text-zinc-800 transition-colors font-medium": true,
+            })}
           >
             {link.label}
           </Link>
