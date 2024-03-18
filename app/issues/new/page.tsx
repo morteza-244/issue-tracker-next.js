@@ -1,5 +1,5 @@
 "use client";
-import { ErrorMessage } from "@/app/components";
+import { ErrorMessage, Spinner } from "@/app/components";
 import { TIssueFormData, issueFormSchema } from "@/app/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, TextField } from "@radix-ui/themes";
@@ -14,6 +14,7 @@ import SimpleMDE from "react-simplemde-editor";
 const NewIssuePage = () => {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     control,
@@ -22,9 +23,11 @@ const NewIssuePage = () => {
   } = useForm<TIssueFormData>({ resolver: zodResolver(issueFormSchema) });
   const onSubmit = async (data: TIssueFormData) => {
     try {
+      setIsSubmitting(true);
       await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
+      setIsSubmitting(false);
       setError("An unexpected error occurred");
     }
   };
@@ -49,7 +52,9 @@ const NewIssuePage = () => {
           render={({ field }) => <SimpleMDE {...field} />}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button>Submit New Issue</Button>
+        <Button disabled={isSubmitting}>
+          {isSubmitting ? <Spinner /> : "Submit New Issue"}
+        </Button>
       </form>
     </div>
   );
