@@ -2,7 +2,7 @@ import { Button } from "@radix-ui/themes";
 import { Edit } from "lucide-react";
 import Link from "next/link";
 
-const IssueEditButton = ({ issueId }: { issueId: number }) => {
+const EditIssueButton = ({ issueId }: { issueId: number }) => {
   return (
     <Button>
       <Edit size={17} />
@@ -11,4 +11,4 @@ const IssueEditButton = ({ issueId }: { issueId: number }) => {
   );
 };
 
-export default IssueEditButton;
+export default EditIssueButton;
