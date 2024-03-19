@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Container, Flex } from "@radix-ui/themes";
 import classNames from "classnames";
 import { Bug } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 const NavBar = () => {
   const pathname = usePathname();
+  const authPath = pathname === "/auth/signIn" || pathname === "/auth/signUp";
   const { data: session, status } = useSession();
   const links = [
     { label: "Dashboard", href: "/" },
@@ -38,14 +39,20 @@ const NavBar = () => {
               ))}
             </ul>
           </Flex>
-          <Flex align={'center'}>
-            {status === "authenticated" && (
-              <Link href="/api/auth/signout" className="font-medium">Logout</Link>
-            )}
-            {status === "unauthenticated" && (
-              <Link href="/api/auth/signin" className="font-medium">Login</Link>
-            )}
-          </Flex>
+          {!authPath && (
+            <Flex align={"center"}>
+              {status === "authenticated" && (
+                <Link href="/api/auth/signout" className="font-medium">
+                  Logout
+                </Link>
+              )}
+              {status === "unauthenticated" && (
+                <Link href="/auth/signIn" className="font-medium">
+                  Login
+                </Link>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Container>
     </nav>
