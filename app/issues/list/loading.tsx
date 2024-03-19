@@ -22,7 +22,7 @@ const LoadingIssuesPage = () => {
 
         <Table.Body>
           {issues.map((issue) => (
-            <Table.Row>
+            <Table.Row key={issue}>
               <Table.Cell>
                 <Skeleton />
                 <div className="block md:hidden mt-2">
