@@ -6,8 +6,11 @@ import FormHeading from "../_components/FormHeading";
 import { signInUserSchema, TSignInFormData } from "@/app/validations";
 import { ErrorMessage } from "@/app/components";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SignInPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -20,8 +23,22 @@ const SignInPage = () => {
     },
   });
 
-  const onSubmit = (data: TSignInFormData) => {
-    console.log(data);
+  const onSubmit = async (data: TSignInFormData) => {
+    try {
+      const user = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (!user?.ok) {
+        window.prompt("User not found");
+        return;
+      }
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="max-w-96 p-4 bg-slate-100 mx-auto rounded-xl mt-10 space-y-4">
