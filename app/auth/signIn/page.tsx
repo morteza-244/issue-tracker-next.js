@@ -1,9 +1,8 @@
 "use client";
-import { ErrorMessage } from "@/app/components";
+import { ErrorMessage, Spinner } from "@/app/components";
 import { signInUserSchema, TSignInFormData } from "@/app/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Text, TextField } from "@radix-ui/themes";
-import { LogIn } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -14,6 +13,7 @@ import FormHeading from "../_components/FormHeading";
 const SignInPage = () => {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -28,6 +28,7 @@ const SignInPage = () => {
 
   const onSubmit = async (data: TSignInFormData) => {
     try {
+      setIsSubmitting(true);
       const user = await signIn("credentials", {
         email: data.email,
         password: data.password,
@@ -35,10 +36,13 @@ const SignInPage = () => {
       });
       if (!user?.ok) {
         setError("Invalid User");
+        setIsSubmitting(false);
         return;
       }
       router.push("/");
-    } catch (error) {}
+    } catch (error) {
+      setIsSubmitting(false);
+    }
   };
   return (
     <div className="max-w-96 p-4 bg-slate-100 mx-auto rounded-xl mt-10 space-y-4">
@@ -70,9 +74,8 @@ const SignInPage = () => {
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
         </Box>
         <Box className="text-center mt-5">
-          <Button>
-            <LogIn size={17} />
-            Sign In
+          <Button disabled={isSubmitting}>
+            {isSubmitting ? <Spinner /> : "Sign In"}
           </Button>
         </Box>
       </form>
