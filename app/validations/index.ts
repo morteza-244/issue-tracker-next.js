@@ -12,8 +12,18 @@ export const issueFormSchema = z.object({
     })
     .min(3),
 });
-
 export type TIssueFormData = z.infer<typeof issueFormSchema>;
+
+export const signUpUserSchema = z.object({
+  name: z.string().min(3, { message: "Name is required" }),
+  email: z
+    .string({ invalid_type_error: "Invalid email address" })
+    .email({ message: "Email is required" }),
+  password: z
+    .string({ required_error: "Password is Required" })
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
+export type TSignUpFormData = z.infer<typeof signUpUserSchema>;
 
 export const signInUserSchema = z.object({
   email: z
@@ -23,5 +33,4 @@ export const signInUserSchema = z.object({
     .string({ required_error: "Password is Required" })
     .min(6, { message: "Password must be at least 6 characters" }),
 });
-
 export type TSignInFormData = z.infer<typeof signInUserSchema>;

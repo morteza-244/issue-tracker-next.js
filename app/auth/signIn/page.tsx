@@ -1,8 +1,8 @@
 "use client";
-import { ErrorMessage, Spinner } from "@/app/components";
+import { ErrorMessage, Link, Spinner } from "@/app/components";
 import { signInUserSchema, TSignInFormData } from "@/app/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -73,11 +73,12 @@ const SignInPage = () => {
           </TextField.Root>
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
         </Box>
-        <Box className="text-center mt-5">
+        <Flex direction={"column"} gap={"3"} mt={"5"} className="text-center">
           <Button disabled={isSubmitting}>
             {isSubmitting ? <Spinner /> : "Sign In"}
           </Button>
-        </Box>
+          <Link href="/auth/signUp">Don't have an account?Sign Up</Link>
+        </Flex>
       </form>
     </div>
   );
