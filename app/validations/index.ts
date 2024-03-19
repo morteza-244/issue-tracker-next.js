@@ -14,3 +14,10 @@ export const issueFormSchema = z.object({
 });
 
 export type TIssueFormData = z.infer<typeof issueFormSchema>;
+
+export const signUpUserSchema = z.object({
+  email: z.string({ invalid_type_error: "Invalid email address" }).email(),
+  password: z
+    .string({ required_error: "Password is Required" })
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
