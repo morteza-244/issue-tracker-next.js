@@ -1,16 +1,19 @@
 "use client";
+import { ErrorMessage } from "@/app/components";
+import { signInUserSchema, TSignInFormData } from "@/app/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Text, TextField } from "@radix-ui/themes";
 import { LogIn } from "lucide-react";
-import { useForm } from "react-hook-form";
-import FormHeading from "../_components/FormHeading";
-import { signInUserSchema, TSignInFormData } from "@/app/validations";
-import { ErrorMessage } from "@/app/components";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import CalloutErrorMessage from "../_components/CalloutErrorMessage";
+import FormHeading from "../_components/FormHeading";
 
 const SignInPage = () => {
   const router = useRouter();
+  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
@@ -30,15 +33,12 @@ const SignInPage = () => {
         password: data.password,
         redirect: false,
       });
-
       if (!user?.ok) {
-        window.prompt("User not found");
+        setError("Invalid User");
         return;
       }
       router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return (
     <div className="max-w-96 p-4 bg-slate-100 mx-auto rounded-xl mt-10 space-y-4">
@@ -46,6 +46,7 @@ const SignInPage = () => {
         title="Login to your account"
         description="Welcome back! please enter your details"
       />
+      {error && <CalloutErrorMessage errorMessage={error} />}
       <form className="space-y-7" onSubmit={handleSubmit(onSubmit)}>
         <Box className="space-y-2">
           <Text as="p" mb={"2"}>
