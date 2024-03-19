@@ -48,7 +48,7 @@ const handler = NextAuth({
     }),
   ],
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
 });
 
