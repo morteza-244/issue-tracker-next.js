@@ -5,8 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import FormHeading from "../_components/FormHeading";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -20,8 +23,13 @@ const SignUpPage = () => {
     },
   });
 
-  const onSubmit = (data: TSignUpFormData) => {
-    console.log(data);
+  const onSubmit = async (data: TSignUpFormData) => {
+    try {
+      await axios.post("/api/auth/signup", data);
+      router.push("/auth/signIn");
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
