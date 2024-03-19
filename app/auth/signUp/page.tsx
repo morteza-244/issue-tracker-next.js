@@ -1,15 +1,20 @@
 "use client";
-import { ErrorMessage, Link } from "@/app/components";
+import { ErrorMessage, Link, Spinner } from "@/app/components";
 import { signUpUserSchema, TSignUpFormData } from "@/app/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Flex, Text, TextField } from "@radix-ui/themes";
-import { useForm } from "react-hook-form";
-import FormHeading from "../_components/FormHeading";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import CalloutErrorMessage from "../_components/CalloutErrorMessage";
+import FormHeading from "../_components/FormHeading";
 
 const SignUpPage = () => {
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -25,10 +30,12 @@ const SignUpPage = () => {
 
   const onSubmit = async (data: TSignUpFormData) => {
     try {
+      setIsSubmitting(true);
       await axios.post("/api/auth/signup", data);
       router.push("/auth/signIn");
     } catch (error) {
-      console.log(error)
+      setIsSubmitting(false);
+      setError("Sorry, Email already exists.");
     }
   };
 
@@ -38,6 +45,7 @@ const SignUpPage = () => {
         title="Create a new account"
         description="To use Issue Tracker, please enter your details"
       />
+      {error && <CalloutErrorMessage errorMessage={error} />}
       <form className="space-y-7" onSubmit={handleSubmit(onSubmit)}>
         <Box className="space-y-2">
           <Text as="p" mb={"2"}>
@@ -70,7 +78,9 @@ const SignUpPage = () => {
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
         </Box>
         <Flex direction={"column"} gap={"3"} mt={"5"} className="text-center">
-          <Button>Create Account</Button>
+          <Button disabled={isSubmitting}>
+            {isSubmitting ? <Spinner /> : "Create Account"}
+          </Button>
           <Link href="/auth/signIn">Already have an account?SignIn</Link>
         </Flex>
       </form>
