@@ -1,3 +1,4 @@
+import { Skeleton } from "@/app/components";
 import { Avatar, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import Link from "next/link";
 const AuthStatus = () => {
   const { data: session, status } = useSession();
 
-  if (status === "loading") return null;
+  if (status === "loading") return <Skeleton width={"3rem"} />;
   if (status === "unauthenticated")
     return (
       <Link href="/auth/signIn" className="nav-link">
