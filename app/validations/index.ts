@@ -13,6 +13,8 @@ export const issueFormSchema = z.object({
     .min(3)
     .max(65535),
 });
+export type TIssueFormData = z.infer<typeof issueFormSchema>;
+
 export const patchIssueFormSchema = z.object({
   title: z
     .string({ invalid_type_error: "Title must be a string" })
@@ -34,7 +36,6 @@ export const patchIssueFormSchema = z.object({
     .optional()
     .nullable(),
 });
-export type TIssueFormData = z.infer<typeof issueFormSchema>;
 
 export const signUpUserSchema = z.object({
   name: z.string().min(3, { message: "Name is required" }),
