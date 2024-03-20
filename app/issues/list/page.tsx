@@ -1,11 +1,10 @@
 import { IssuesStatusBadge, Link } from "@/app/components";
 import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
-import delay from "delay";
-import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
+import { Table } from "@radix-ui/themes";
+import { ArrowUp } from "lucide-react";
 import NextLink from "next/link";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import IssueActions from "./IssueActions";
 
 interface IssuesPageProps {
   searchParams: {
@@ -28,13 +27,20 @@ const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
+
+  const orderBy = columns
+    .map((columns) => columns.value)
+    .includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: "asc" }
+    : undefined;
+
   const issues = await prisma.issue.findMany({
     where: {
       status,
     },
-    
+    orderBy,
   });
-  await delay(3000);
+
   return (
     <div>
       <IssueActions />
@@ -53,7 +59,9 @@ const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
                 >
                   {column.label}
                 </NextLink>
-                {column.value === searchParams.orderBy && <ArrowUp size={15} className="inline" />}
+                {column.value === searchParams.orderBy && (
+                  <ArrowUp size={15} className="inline" />
+                )}
               </Table.ColumnHeaderCell>
             ))}
           </Table.Row>
