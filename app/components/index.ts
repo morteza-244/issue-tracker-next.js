@@ -3,3 +3,4 @@ export { default as Spinner } from "./Spinner";
 export { default as IssuesStatusBadge } from "./IssuesStatusBadge";
 export { default as Skeleton } from "./Skeleton";
 export { default as Link } from "./Link";
+export { default as Pagination } from "./Pagination";
