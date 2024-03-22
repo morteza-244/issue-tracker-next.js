@@ -3,22 +3,26 @@ import { Card, Flex, Text } from "@radix-ui/themes";
 import Link from "next/link";
 
 interface IssueSummaryProps {
-  open: number;
-  inProgress: number;
-  closed: number;
+  issuesStatus: {
+    open: number;
+    inProgress: number;
+    closed: number;
+  };
 }
 
-const IssueSummary = ({ closed, inProgress, open }: IssueSummaryProps) => {
+const IssueSummary = ({
+  issuesStatus: { closed, inProgress, open },
+}: IssueSummaryProps) => {
   const cards: { label: string; value: number; status: Status }[] = [
     { label: "Open Issues", value: open, status: "OPEN" },
     { label: "Closed Issues", value: closed, status: "CLOSED" },
     { label: "In Progress Issues", value: inProgress, status: "IN_PROGRESS" },
   ];
   return (
-    <Flex gap={"5"}>
+    <Flex gap={"5"} wrap={'wrap'}>
       {cards.map((card) => (
         <Card key={card.label}>
-          <Flex direction={"column"} gap={"2"} align={'center'}>
+          <Flex direction={"column"} gap={"2"} align={"center"}>
             <Link
               className="text-sm font-medium"
               href={`/issues/list?status=${card.status}`}
